@@ -99,9 +99,11 @@ export async function generateChatJson(prompt: string): Promise<unknown> {
       responseMimeType: "application/json",
       responseSchema: CHAT_RESPONSE_SCHEMA,
       temperature: 0.5,
-      // 2048 leaves enough room for the message + slotUpdates JSON even when
-      // Gemini gets chatty with the optional `reasoning` field.
-      maxOutputTokens: 2048,
+      // 4096 is well past what a 60-word message + slotUpdates JSON needs,
+      // but Gemini occasionally pads strings with escape characters that
+      // balloon byte count. The fallback handler catches anything that
+      // somehow still truncates, so the user experience is always clean.
+      maxOutputTokens: 4096,
     },
   });
 
