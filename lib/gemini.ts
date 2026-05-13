@@ -79,7 +79,10 @@ const CHAT_RESPONSE_SCHEMA = {
     },
     suggestedChips: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING } },
     done: { type: SchemaType.BOOLEAN },
-    reasoning: { type: SchemaType.STRING },
+    // NOTE: deliberately no `reasoning` field — when present, Gemini fills it
+    // with multi-paragraph explanations that blow past maxOutputTokens and
+    // truncate the JSON. The zod schema still ACCEPTS reasoning if the model
+    // sneaks it in, but the schema here says don't emit it.
   },
   required: ["message", "done"],
 };
